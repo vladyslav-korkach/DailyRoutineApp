@@ -1,0 +1,41 @@
+services:
+  dailyroutineapp:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8081:80
+    container_name: dailyroutineapp
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development    
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS=true
+      - ConnectionStrings__DefaultConnection=Server=dailyroutineapp-mysql;Database=DailyRoutineAppDb;User=root;Password=password;
+      - Jwt__Key=your-very-secure-secret-key-that-is-long-enough
+      - Jwt__Issuer=your-issuer
+      - Jwt__Audience=your-audience
+    depends_on:
+      - mysql
+    volumes:
+      - dailyroutine-app:/app:rw
+
+  mysql:
+    image: mysql:8.0
+    platform: linux/arm64/v8
+    container_name: dailyroutineapp-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: DailyRoutineAppDb
+    volumes:
+      - dailyroutineapp-mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  dailyroutine-app:
+  dailyroutineapp-mysql-data:

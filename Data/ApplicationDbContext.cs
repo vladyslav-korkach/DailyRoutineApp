@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 namespace DailyRoutineApp.Data 
 {
 
-    public class DailyRoutineDbContext : DbContext
+    public class ApplicationDbContext : DbContext
     {
-        public DailyRoutineDbContext(DbContextOptions<DailyRoutineDbContext> options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
